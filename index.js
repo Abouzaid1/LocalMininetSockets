@@ -20,7 +20,7 @@ io.on('connect', (socket) => {
         console.log('User joined with data:', data);
 
         // Emit the 'joinTopo' event back to the client with the received data
-        io.emit('send', "hello");
+        io.emit('send', data);
     });
 
     // Handle client disconnect
