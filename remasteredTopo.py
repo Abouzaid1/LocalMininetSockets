@@ -19,7 +19,7 @@ def on_send(data):
     data_json = json.dumps(data)
     datastring = ",".join(str(value) for value in data.values())
     subprocess.run(['sudo', 'mn', '-c'])
-    subprocess.run(['sudo', 'python3', 'toporun.py', data_json])
+    subprocess.run(['sudo', 'python3', 'topo.py', data_json])
     
 def response(data):
     print('topo')

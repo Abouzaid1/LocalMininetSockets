@@ -35,14 +35,22 @@ def run():
         # Add hosts (PCs)
                 hosts = {}
                 for pc in topo_dict.get('pcs', []):
-                    hosts[pc['name']] = self.addHost(pc['name'])
+                    if pc['ipAddress'] == None:
+                        hosts[pc['name']] = self.addHost(pc['name'])
+                    else:
+                        self.addHost(pc['name'],ip=pc["ipAddress"],defaultRoute=pc['defaultGateWay'])
                 for link in topo_dict.get('links', []):
-                    self.addLink(link['link']['from'], link['link']['to'])
-                    print(link['link']['from'], link['link']['to'])
+                    self.addLink(link['from'], link['to'])
         def createnetwork():
             print(topo_dict.get('sws', []))
             topo = MyTopology()
-            net = Mininet(topo=topo, switch=OVSSwitch,controller=OVSController)
+            if topo_dict["remoteController"] != None:
+                net = Mininet(topo=topo, switch=OVSSwitch,
+                        controller=lambda name: RemoteController(name,
+                                                                ip=topo_dict["remoteController"],
+                                                                port=topo_dict["remoteControllerPort"])
+            else:
+                net = Mininet(topo=topo, switch=OVSSwitch,controller=OVSController)
             net.start()
             net.pingAll()
         createnetwork()
